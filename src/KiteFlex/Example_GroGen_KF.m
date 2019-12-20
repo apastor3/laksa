@@ -24,14 +24,15 @@ addpath('../common/')
 Flag_Dim = 1;
 PD       = Fun_PD_GroGen_KF;
 % Construct the dimensionless parameters
-PND             = Fun_PND_KF(PD);
+PND      = Fun_PND_KF(PD);
  
 display('Computing Equilibrium State')
 [u0  Error Flag PND ]=Equilibrium_GroGen_KF(0,PND);
 if Flag==1
     display('Equilibrium state was compputed successfully')
     display('Computing the trajectory')
-    [T X] = ode45('Fun_ODE_Lag_KF',[0:0.0025:.1],u0);
+    display('Initial Condition = Equilibrium State + Perturbation')
+    [T X] = ode45('Fun_ODE_Lag_KF',[0:0.0025:.1],u0+1e-3*rand(length(u0),1));
     
     for i=1:1:length(T)
        [Tout(i) rR_Edge(:,:,i) rR(:,:,i) vR(:,:,i) aR(:,:,i) omegaR(:,:,i) gR(:,:,i) FA_R(:,:,i) Tension(:,:,i) rQ(:,i) R_KE(:,:,i) ...

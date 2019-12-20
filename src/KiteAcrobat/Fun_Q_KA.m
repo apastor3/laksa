@@ -31,7 +31,9 @@ function [Q f m alfa beta] = Fun_Q_KA(vw,vg,omega,Ups_s,Phi,PND)
 %% Components of the aerodinamic velocity vector in the body frame
 VA     = vg-vw;
 %% Components in the body frame of the aerodynamic force and torque 
-[f m alfa beta] = Aerokite(VA,omega,PND,0,0,0);
+[f m alfa beta] = Aerokite(VA,omega,PND,0,0,0);   
+
+
 %% Generalized forces
 Q        = f'*Ups_s+m'*Phi;
 Q        = Q';

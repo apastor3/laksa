@@ -61,6 +61,9 @@ PD.Tether.Cd     = 1.0;           % Tether Cd
 
 
 % Force Aerodynamic coefficients
+
+PD.Aero.Full   =  0;                % Set 1 to use full model     
+
 PD.Aero.Cx0    = -0.065;         % Cx0                          (-)  % Groot
 PD.Aero.Cxalfa =  0.18;          % Cx_alfa                      (-)  % Groot
 PD.Aero.Cybeta = -1.57;          % Cy_beta                      (-)  % Williams
@@ -76,6 +79,11 @@ PD.Aero.Cmq    = -0.17;          % Cm_q_tilde                   (-)       % Will
 PD.Aero.Cnbeta =  0.78;          % Cn_beta                      (-)       % Williams
 PD.Aero.Cnr    = -0.002;         % Cn_r_tilde                   (-)       % Williams Cn_r = Cnr*b/2Va
 PD.Aero.Vref   =  7;             % V_ref                        (m/s)     % Groot
+
+% Aerodynamic Model Limits (only for postprocess checking purposes)
+PD.Aero.alfa_s =  25;            % Stall angle                  (º)
+PD.Aero.beta_m =  15;            % Maximum sideslip angle       (º)
+
 
 % Aerodynamic Control Surfaces
 % Elevator

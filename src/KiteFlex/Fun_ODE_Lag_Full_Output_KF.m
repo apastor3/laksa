@@ -1,5 +1,5 @@
 function [rQ rR_Edge R_KE rR vR omegaR FA_R QR rK vK omegaK FA_K MA_K MMC_K alfa_K beta_K QK rG vG omegaG FA_G MA_G MMC_G QG DF RHS]=  Fun_ODE_Lag_Full_Output_KF(t,xs_amp,xc_amp,PND)
-
+    
 %-----------------------------------------------------------------------------
 % Project   : LAKSA                                                          %
 % Authors   : Gonzalo Sanchez-Arriaga, Alejandro Pastor-Rodriguez,           %

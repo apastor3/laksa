@@ -58,38 +58,104 @@ if PND.Gen.Num >0
       PND.Gen.nu(i) =  PD.Gen.nu(i);
     end
 end
-% Force Aerodynamic coefficients
-
-PND.Aero.Cx0    = PD.Aero.Cx0;            % Cx0                          (-)  % Groot
-PND.Aero.Cxalfa = PD.Aero.Cxalfa;         % Cx_alfa                      (-)  % Groot
-PND.Aero.Cybeta = PD.Aero.Cybeta;         % Cy_beta                      (-)  % Williams
-PND.Aero.Cz0    = PD.Aero.Cz0;            % Cz0                          (-)  % Groot
-PND.Aero.Czalfa = PD.Aero.Czalfa;         % Cz_alfa                      (-)  % Groot
-
-% Torque Aerodynamic coefficients
-PND.Aero.Clbeta = PD.Aero.Clbeta;         % Cl_beta                      (-)       % Williams
-PND.Aero.Clp    = PD.Aero.Clp;            % Cl_p_tilde                   (-)       % Williams Clp = Clp * b/2Va
-PND.Aero.Cm0    = PD.Aero.Cm0;            % Cm0                          (-)       % Groot
-PND.Aero.Cmalfa = PD.Aero.Cmalfa;         % Cm_alfa                      (-)       % Groot
-PND.Aero.Cmq    = PD.Aero.Cmq;            % Cm_q_tilde                   (-)       % Williams     Cmq = Cmq*c/Va  
-PND.Aero.Cnbeta = PD.Aero.Cnbeta;         % Cn_beta                      (-)       % Williams
-PND.Aero.Cnr    = PD.Aero.Cnr;            % Cn_r_tilde                   (-)       % Williams Cn_r = Cnr*b/2Va
-PND.Aero.vt     = PD.Aero.Vref/sqrt(PD.Env.g*PD.Tether.L);  % Vref/sqrt(g*L0)           (-)
 
 % Aerodynamic Control Surfaces
 %Elevator
 Vt                 = PD.AerC.St*PD.AerC.lt/(PD.Inertia.A*PD.Inertia.c);
-PND.Aero.Cmdelta_e = -Vt*PD.AerC.at;
+PD.Aero.Cmdelta_e = -Vt*PD.AerC.at;
 % Rudder
 Vvz                =  PD.AerC.Sv*PD.AerC.hv/(PD.Inertia.A*PD.Inertia.b);
 Vvx                =  PD.AerC.Sv*PD.AerC.lt/(PD.Inertia.A*PD.Inertia.b);
 
-PND.Aero.Cydelta_r =  PD.AerC.Sv/PD.Inertia.A*PD.AerC.av;
-PND.Aero.Cldelta_r =  Vvz*PD.AerC.av;
-PND.Aero.Cndelta_r = -Vvx*PD.AerC.av;
+PD.Aero.Cydelta_r =  PD.AerC.Sv/PD.Inertia.A*PD.AerC.av;
+PD.Aero.Cldelta_r =  Vvz*PD.AerC.av;
+PD.Aero.Cndelta_r = -Vvx*PD.AerC.av;
 % Ailerons
 Va                 =  PD.AerC.Sa*PD.AerC.ya/(PD.Inertia.A*PD.Inertia.b);
-PND.Aero.Cldelta_a =  Va*PD.AerC.aa;
+PD.Aero.Cldelta_a =  Va*PD.AerC.aa;
+
+% Force Aerodynamic coefficients
+PND.Aero.Full =  PD.Aero.Full;
+
+
+PND.Aero.Cmdelta_e = PD.Aero.Cmdelta_e;
+PND.Aero.Cydelta_r = PD.Aero.Cydelta_r;
+PND.Aero.Cldelta_r = PD.Aero.Cldelta_r;
+PND.Aero.Cndelta_r = PD.Aero.Cndelta_r;
+PND.Aero.Cldelta_a = PD.Aero.Cldelta_a;
+
+if PD.Aero.Full ==  1
+    PND.Aero.CX = PD.Aero.CX;
+    PND.Aero.CY = PD.Aero.CY;
+    PND.Aero.CZ = PD.Aero.CZ;
+    
+    PND.Aero.Cm = PD.Aero.Cm;
+    PND.Aero.Cl = PD.Aero.Cl;
+    PND.Aero.Cn = PD.Aero.Cn;
+else    
+    
+    PND.Aero.CX = [0  PD.Aero.Cxalfa PD.Aero.Cx0...    % CX0 
+                   0         0              0 ...         % CX_beta
+                   0         0              0 ...         % CX_p
+                   0         0              0 ...         % CX_q
+                   0         0              0 ...         % CX_r 
+                   0         0              0 ...         % CX_delta_aileron
+                   0         0              0 ...         % CX_delta_elevator
+                   0         0              0];           % CX_delta_rudder     
+
+    PND.Aero.CY =  [0         0              0 ...         % CY0 
+                   0         0        PD.Aero.Cybeta ...  % CY_beta
+                   0         0              0  ...        % CY_p
+                   0         0              0  ...        % CY_q
+                   0         0              0  ...        % CY_r 
+                   0         0              0  ...        % CY_delta_aileron
+                   0         0       PD.Aero.Cydelta_r... % CY_delta_elevator
+                   0         0              0  ];         % CY_delta_rudder     
+             
+    PND.Aero.CZ = [ 0    PD.Aero.Czalfa  PD.Aero.Cz0 ...   % CZ0 
+                   0         0              0 ...         % CZ_beta
+                   0         0              0 ...         % CZ_p
+                   0         0              0 ...         % CZ_q
+                   0         0              0 ...         % CZ_r 
+                   0         0              0 ...         % CZ_delta_aileron
+                   0         0              0 ...         % CZ_delta_elevator
+                   0         0              0];           % CZ_delta_rudder     
+              
+
+    PND.Aero.Cm = [ 0      PD.Aero.Cmalfa  PD.Aero.Cm0 ... % Cm0 
+                   0         0              0 ...         % Cm_beta
+                   0         0              0 ...         % Cm_p
+                   0         0            PD.Aero.Cmq...  % Cm_q
+                   0         0              0 ...         % Cm_r 
+                   0         0              0 ...         % Cm_delta_aileron
+                   0         0       PD.Aero.Cmdelta_e ...% Cm_delta_elevator
+                   0         0              0];           % Cm_delta_rudder     
+
+     PND.Aero.Cl= [ 0         0              0 ...         % Cl0 
+                   0         0         PD.Aero.Clbeta ... % Cl_beta
+                   0         0            PD.Aero.Clp ... % Cl_p
+                   0         0              0  ...        % Cl_q
+                   0         0              0 ...         % Cl_r 
+                   0         0      PD.Aero.Cldelta_a ... % Cl_delta_aileron
+                   0         0              0 ...         % Cl_delta_elevator
+                   0         0      PD.Aero.Cldelta_r];   % Cl_delta_rudder   
+               
+     PND.Aero.Cn= [ 0         0             0 ...         % Cn0 
+                   0         0         PD.Aero.Cnbeta ... % Cn_beta
+                   0         0              0         ... % Cn_p
+                   0         0              0  ...        % Cn_q
+                   0         0           PD.Aero.Cnr...   % Cn_r 
+                   0         0              0 ... % Cn_delta_aileron
+                   0         0              0 ...         % Cn_delta_elevator
+                   0         0      PD.Aero.Cndelta_r ];  % Cn_delta_rudder         
+end 
+
+PND.Aero.vt      = PD.Aero.Vref/sqrt(PD.Env.g*PD.Tether.L);            % V_ref/sqrt(g*L0)     
+
+% Aerodynamic Model Limits (only for postprocess checking purposes)
+PND.Aero.alfa_s =  PD.Aero.alfa_s*pi/180;                               % Stall angle(rad)
+PND.Aero.beta_m =  PD.Aero.beta_m*pi/180;   
+
 
 % Tether parameters
 Area_t    = pi*(PD.Tether.dt /2)^2;

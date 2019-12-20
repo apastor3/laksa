@@ -37,14 +37,15 @@ x0_Red              = [u0(1:PND.Num.N); u0(2*PND.Num.N+1)];
 % Look for equilibrium
 [x0_Red Error Flag] = my_fzero(@Fun_ODE_KF_EQ_GroGen,x0_Red,PND);
 
+
 if Flag ==1    
     u0  = [x0_Red(1:PND.Num.N); zeros(PND.Num.N,1); x0_Red(PND.Num.N+1); 0; 0];
     u0  = [u0;zeros(2*PND.Num.N+3,1)];
     xc_amp   = Fun_Control_KF(0,u0,PND);
        
     [rQ rR_Edge R_KE rR vR omegaR FA_R QR rK vK omegaK FA_K MA_K MMC_K alfa_K beta_K QK rG vG omegaG FA_G MA_G MMC_G QG DF RHS]=  Fun_ODE_Lag_Full_Output_KF(0,u0,xc_amp,PND); 
-    Error = max(sqrt(RHS'*RHS))
-    display(['Equilibrium Error = ' num2str(Error)])
+    Error = max(sqrt(RHS'*RHS));
+    
 else
     u0     = 0;
     Error  = 1e9;

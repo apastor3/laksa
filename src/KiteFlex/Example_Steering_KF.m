@@ -67,122 +67,40 @@ figure(1)
 hold on
 plot(cos(0:0.001:2*pi),sin(0:0.001:2*pi),'b')
 plot(real(Floquet),imag(Floquet),'+')
-
+xlabel('Real(\mu)')
+ylabel('Imag(\mu)')
 
     
 [T X] = ode45('Fun_ODE_Lag_KF',[0:0.005:T],u0);
     
-Error = max(abs(X(end,:)'-u0))
+display(['Periodic Orbit Error = ' num2str(max(abs(X(end,:)'-u0))) ])
     
-    
-Ind = 20;
 for i=1:1:length(T)
        [Tout(i) rR_Edge(:,:,i) rR(:,:,i) vR(:,:,i) aR(:,:,i) omegaR(:,:,i) gR(:,:,i) FA_R(:,:,i) Tension(:,:,i) rQ(:,i) R_KE(:,:,i) ...
        rK(:,i) vK(:,i) aK(:,i) euler(:,i) omegaK(:,i) gK(:,i) FA_K(:,i) FR_K(:,i) FG_K(:,i)  MA_K(:,i) MR_K(:,i) MG_K(:,i) MMC_K(:,i) alfa_K(i) beta_K(i)... 
        rG(:,:,i) vG(:,:,i) aG(:,:,i) omegaG(:,:,i) gG(:,:,i) FA_G(:,:,i)  FK_G(:,:,i) MA_G(:,:,i) MK_G(:,:,i)  MMC_G(:,:,i) xc_out(:,i) xs_target_out(:,i) Error_C(i)] = Fun_Post_KF(PD,PND,T(i),X(i,:)',Flag_Dim);
-       
-         
-       if Ind==20
+      
+end
+
+Ind = 20;
+for i=1:1:length(T)
+    if Ind==20
            Plot_GroGen_KF(X(i,:)',Tout(i),rQ(:,i),rR(:,:,i),rK(:,i),rG(:,:,i),R_KE(:,:,i),rR_Edge(:,:,i),PND,Flag_Dim,PD);
+           plot3(-squeeze(rK(1,:)),squeeze(rK(2,:)),-squeeze(rK(3,:)),'r-')
            pause(0.01)
            title('')
            Ind = 1;
           
-       else
+    else
            Ind = Ind+1;
-       end
-       
-       eta(i)  =  xc_out(4,i);  % Bridle angle eta
+    end
 end
-   
     
 %[Kite Position, Velocity, Euler, alfa&beta, Tension, Control, Rotor angular velocity, Error_C
-%Flag_Plot = [1             ,     1   ,   1  ,     1    ,    1   ,    1   ,       1               ,   1  ];
+Flag_Plot = [1             ,     1   ,   1  ,     1    ,    1   ,    1   ,       1               ,   1  ];
            
-%Plot_Results_KF(Tout,rR_Edge, rR, vR, aR, omegaR, gR, FA_R, Tension, rQ, R_KE, ...
-%rK, vK, aK, euler, omegaK, gK, FA_K, FR_K, FG_K,  MA_K, MR_K, MG_K, MMC_K, alfa_K, beta_K,... 
-%rG, vG, aG, omegaG, gG, FA_G,  FK_G, MA_G, MK_G,  MMC_G, xc_out,xs_target_out,Error_C, Flag_Dim, Flag_Plot,PD)
-
-
-
-% Control Law and trajectory
-
-if Flag_Dim == 0
-    Unit_Time         = '(\sqrt{L_0/g})$';
-    Unit_Length       = '(L_0$)';
-    Unit_Velocity     = '\sqrt{gL_0}$';
-    Unit_deg          = '(rad)$';
-    Unit_Force        = '(mg)$'
-    Unit_Moment       = '(mgL_0)$';
-    Unit_Ang_Velocity = '(g/L_0)^{1/2}$';    
-else
-    Unit_Time         = '(s)$';
-    Unit_Length       = '(m)$';
-    Unit_Velocity     = '(m/s)$';
-    Unit_deg          = '(^\circ )$';
-    Unit_Force        = '(N)$';
-    Unit_Moment       = '(N m )$';
-    Unit_Ang_Velocity = '(rpm)$';
-end
-Width = 1.5;
-
-figure(102)
-subplot(2,1,1)
-hold on
-plot(Tout,xc_out(4,:),'linewidth',Width)
-xlabel(['$Time\ ' Unit_Time],'fontsize',12,'interpreter','latex' )
-ylabel(['$\eta\ ' Unit_deg],'fontsize',12,'interpreter','latex')
-grid on
-set(gca,'box','on','fontsize',12)
-xlim([0 max(Tout)])    
-
-subplot(2,1,2)
-hold on
-hold on
-plot(rK(2,:),-rK(3,:),'linewidth',Width)
-plot(rK(2,end),-rK(3,end),'+')
-xlabel(['$Y\ ' Unit_Length],'fontsize',12,'interpreter','latex' )
-ylabel(['$H\ ' Unit_Length],'fontsize',12,'interpreter','latex')
-grid on
-set(gca,'box','on','fontsize',12)    
-
-   
-%%
- figure(104)
- 
- subplot(3,1,1)
- hold on
- plot(Tout,euler(1,:),'linewidth',Width)
- %set(gca,'position',[0.13 0.73 0.8 0.23])
- xlabel(['$Time\ ' Unit_Time],'fontsize',12,'interpreter','latex' )
- ylabel(['$\psi\ ' Unit_deg],'fontsize',12,'interpreter','latex')
- grid on
- set(gca,'box','on','fontsize',12)
- xlim([0 max(Tout)])      
- 
- subplot(3,1,2)
- hold on
- plot(Tout,euler(2,:),'linewidth',Width)
- %set(gca,'position',[0.13 0.43 0.8 0.23])
- xlabel(['$Time\ ' Unit_Time],'fontsize',12,'interpreter','latex' )
- ylabel(['$\theta\ ' Unit_deg],'fontsize',12,'interpreter','latex')
- grid on
- set(gca,'box','on','fontsize',12)
- xlim([0 max(Tout)])   
- 
- subplot(3,1,3)
- hold on
- plot(Tout, euler(3,:),'linewidth',Width)
- xlabel(['$Time\ ' Unit_Time],'fontsize',12,'interpreter','latex' )
- ylabel(['$\phi\ ' Unit_deg],'fontsize',12,'interpreter','latex')
- grid on
- set(gca,'box','on','fontsize',12)
- xlim([0 max(Tout)])  
- ylim([0 360])  
- %set(gca,'position',[0.13 0.13 0.8 0.23])
-
-
-
-
+Plot_Results_KF(Tout,rR_Edge, rR, vR, aR, omegaR, gR, FA_R, Tension, rQ, R_KE, ...
+rK, vK, aK, euler, omegaK, gK, FA_K, FR_K, FG_K,  MA_K, MR_K, MG_K, MMC_K, alfa_K, beta_K,... 
+rG, vG, aG, omegaG, gG, FA_G,  FK_G, MA_G, MK_G,  MMC_G, xc_out,xs_target_out,Error_C, Flag_Dim, Flag_Plot,PD)
 
    

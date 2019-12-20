@@ -1,6 +1,5 @@
 function [u0  Error Flag]=Equilibrium_KS(u0,PND)
 
-global PND
 %-----------------------------------------------------------------------------
 % Project   : LAKSA                                                          %
 % Authors   : Gonzalo Sanchez-Arriaga, Alejandro Pastor-Rodriguez,           %

@@ -26,6 +26,8 @@ PD.Kite.Iz    =  18.0;           % Iz                                  (kg m^2)
 PD.Kite.Ixz   =  0.0;            % Ixz                                 (kg m^2)
 
 % Force Aerodynamic coefficients
+PD.Aero.Full   =  0;             % Set 1 to use full model     
+
 PD.Aero.Cx0    = -0.065;         % Cx0                          (-)  
 PD.Aero.Cxalfa =  0.18;          % Cx_alfa                      (-)  
 PD.Aero.Cybeta = -1.57;          % Cy_beta                      (-)  
@@ -41,6 +43,13 @@ PD.Aero.Cmq    = -0.17;          % Cm_q_tilde                   (-)
 PD.Aero.Cnbeta = -0.027;         % Cn_beta                      (-)    
 PD.Aero.Cnr    = -0.002;         % Cn_r_tilde                   (-)       
 PD.Aero.Vref   =  7;             % V_ref                        (m/s)     
+
+% Control ->  This control is not implemented in the current version of the code
+PD.Aero.Cydelta_r = 0;
+PD.Aero.Cmdelta_e = 0;
+PD.Aero.Cldelta_a = 0;
+PD.Aero.Cldelta_r = 0;
+PD.Aero.Cndelta_r = 0;  
 
 % Aerodynamic Model Limits (only for postprocess checking purposes)
 PD.Aero.alfa_s =  25;            % Stall angle                  (º)

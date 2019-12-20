@@ -67,6 +67,8 @@ PD.Bridle.delta = 80*pi/180;          % delta                              (rad)
 PD.Bridle.eta   = 0.;                 % eta                                (rad)
 
 % Force Aerodynamic coefficients
+PD.Aero.Full   =  0;                % Set 1 to use full model     
+
 PD.Aero.Vref   =  5;                  % V_ref                        (m/s)     % BD
 PD.Aero.Cx0    = -0.025;              % Cx0                          (-)  % BD
 PD.Aero.Cxalfa =  0.67;               % Cx_alfa                      (-) 
@@ -82,6 +84,11 @@ PD.Aero.Cmalfa = -0.86;               % Cm_alfa                      (-)
 PD.Aero.Cmq    = -0.3;                % Cm_q_tilde                   (-)           
 PD.Aero.Cnbeta =  0.052;              % Cn_beta                      (-)       
 PD.Aero.Cnr    = -0.02;              % Cn_r_tilde                   (-)       
+
+% Aerodynamic Model Limits (only for postprocess checking purposes)
+PD.Aero.alfa_s =  25;            % Stall angle                  (º)
+PD.Aero.beta_m =  15;            % Maximum sideslip angle       (º)
+
 
 % Aerodynamic Control Surfaces
 % Elevator

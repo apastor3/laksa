@@ -1,11 +1,11 @@
-function PND = Fun_PND_KA(PD)
+function PND = Fun_PND_KT(PD)
 
 %-----------------------------------------------------------------------------
 % Project   : LAKSA                                                          %
-% Authors   : Gonzalo Sanchez-Arriaga, Alejandro Pastor-Rodriguez,           %
+% Authors   : Gonzalo Sanchez-Arriaga and  Jose A. Serrano-Iglesia           %
 % Language  : Matlab                                                         %
 % Synopsis  : Compute Dimensionless parameters                               %
-% Copyright :  Universidad Carlos III de Madrid, 2017. All rights reserved   %
+% Copyright : Universidad Carlos III de Madrid, 2017. All rights reserved    %
 %-----------------------------------------------------------------------------
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inputs: structure PD with the physical parameters                %%
@@ -14,22 +14,41 @@ function PND = Fun_PND_KA(PD)
 %                                                                  %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Kite Geometry and Inertia
-PND.Kite.mu      =  PD.Env.ro*PD.Kite.A*PD.Tether.L0/(2*PD.Kite.m );    % mu
-PND.Kite.c       =  PD.Kite.c/PD.Tether.L0;                             % eps_c
-PND.Kite.b       =  PD.Kite.b/PD.Tether.L0;                             % eps_b
-PND.Kite.h       =  PD.Kite.h/PD.Tether.L0;                             % eps_h (only plotting purposes)
-PND.Kite.hg      =  PD.Kite.hg/PD.Tether.L0;                            % eps_hg (only plotting purposes)
+PND.Kite.N       = PD.Kite.N;                % Number of Kites        
 
-iota_Ix          = PD.Kite.Ix/(PD.Kite.m*PD.Tether.L0^2);               % Ix/m*L0^2   
-iota_Iy          = PD.Kite.Iy/(PD.Kite.m*PD.Tether.L0^2);               % Iy/m*L0^2   
-iota_Iz          = PD.Kite.Iz/(PD.Kite.m*PD.Tether.L0^2);               % Iz/m*L0^2    
-iota_Ixz         = PD.Kite.Ixz/(PD.Kite.m*PD.Tether.L0^2);              % Ixz/m*L0^2 
+% Characteristic variables
+L0               =  PD.Tether.L(1);
+M0               =  PD.Kite.m(1);
+for i=1:1:PND.Kite.N
+   % Kite Geometry and Inertia
+    PND.Kite.mu(i)    =  PD.Env.ro*PD.Kite.A(i)*L0/(2*M0);                   % mu
+    PND.Kite.c(i)     =  PD.Kite.c(i)/L0;                                    % eps_c
+    PND.Kite.b(i)     =  PD.Kite.b(i)/L0;                                    % eps_b
+    PND.Kite.h(i)     =  PD.Kite.h(i)/L0;                                    % eps_h (only plotting purposes)
+    PND.Kite.hg(i)    =  PD.Kite.hg(i)/L0;                                   % eps_hg (only plotting purposes)
+    PND.Kite.sigma(i) =  PD.Kite.m(i)/M0;                                    % Mass ratio
+   
+    iota_Ix        = PD.Kite.Ix(i)/(M0*L0^2);               % Ix/m*L0^2   
+    iota_Iy        = PD.Kite.Iy(i)/(M0*L0^2);               % Iy/m*L0^2   
+    iota_Iz        = PD.Kite.Iz(i)/(M0*L0^2);               % Iz/m*L0^2    
+    iota_Ixz       = PD.Kite.Ixz(i)/(M0*L0^2);              % Ixz/m*L0^2 
 
-PND.Kite.iota    = [iota_Ix 0 iota_Ixz; 0 iota_Iy 0;iota_Ixz 0  iota_Iz];
+    PND.Kite.iota(:,:,i) = [iota_Ix 0 iota_Ixz; 0 iota_Iy 0;iota_Ixz 0  iota_Iz];
+    
+    % Tether length
+    PND.Tether.L(i)      = PD.Tether.L(i)/L0;
+    
+    % Attachment points 
+    PND.Tether.XA(i)     = PD.Tether.XA(i)/L0;                           % XA/L0 
+    PND.Tether.YA(i)     = PD.Tether.YA(i)/L0;                           % YA/L0 
+    PND.Tether.ZA(i)     = PD.Tether.ZA(i)/L0;                           % ZA/L0 
 
-% Force Aerodynamic coefficients
-
+    PND.Tether.XC(i)     = PD.Tether.XC(i)/L0;                           % XC/L0 
+    PND.Tether.YC(i)     = PD.Tether.YC(i)/L0;                           % YC/L0 
+    PND.Tether.ZC(i)     = PD.Tether.ZC(i)/L0;                           % ZC/L0 
+    
+end
+% Aerodynamic Force and Torque Coefficients
 PND.Aero.Full =  PD.Aero.Full;
 
 if PD.Aero.Full ==  1
@@ -98,34 +117,27 @@ else
                    0         0      PD.Aero.Cndelta_r ];  % Cn_delta_rudder         
 end 
 
-PND.Aero.vt      = PD.Aero.Vref/sqrt(PD.Env.g*PD.Tether.L0);            % V_ref/sqrt(g*L0)     
+PND.Aero.vt      = PD.Aero.Vref/sqrt(PD.Env.g*L0);            % V_ref/sqrt(g*L0)     
 
 % Aerodynamic Model Limits (only for postprocess checking purposes)
 PND.Aero.alfa_s =  PD.Aero.alfa_s*pi/180;                               % Stall angle(rad)
-PND.Aero.beta_m =  PD.Aero.beta_m*pi/180;   
+PND.Aero.beta_m =  PD.Aero.beta_m*pi/180;                               % Maximum sideslip angle (rad)
 
 % Enviromental Properties
 PND.Env.Type     = PD.Env.Type;                                         % Wind law
-PND.Env.vw       = PD.Env.Vw/sqrt(PD.Env.g*PD.Tether.L0);               % V_0 tilde 
+PND.Env.vw       = PD.Env.Vw/sqrt(PD.Env.g*L0);                         % V_0 tilde 
 PND.Env.alfa     = PD.Env.alfa;                                         % Exponent of the wind speed law
-PND.Env.H0       = PD.Env.H0/PD.Tether.L0;                              % Height Scale
+PND.Env.H0       = PD.Env.H0/L0;                                        % Height Scale
 PND.Env.eps      = PD.Env.eps;                                          % Wind Speed fluctuation level
-PND.Env.Omega    = PD.Env.Omega*sqrt(PD.Tether.L0/PD.Env.g);            % Normalized fluctuation frequency 
+PND.Env.Omega    = PD.Env.Omega*sqrt(L0/PD.Env.g);                      % Normalized fluctuation frequency 
 
-% Tether Properties
-PND.Tether.XA    = PD.Tether.XA/PD.Tether.L0;                           % XA/L0 
-PND.Tether.YA    = PD.Tether.YA/PD.Tether.L0;                           % YA/L0 
-PND.Tether.ZA    = PD.Tether.ZA/PD.Tether.L0;                           % ZA/L0 
+% Control 
+PND.Ctr.Type     = PD.Ctr.Type;                 % 0 ->   Control Surfaces deflections are constant
 
-% Control parameters 
-PND.Ctr.Type     = PD.Ctr.Type;                                         % 0 ->  l = sqrt(1-yA^2) and delta = 0
-                                                                        % 1 ->  l = sqrt(1-yA^2) and delta = delta1*sin(omega*t)                                 
-                                                                        % 2 ->  l = sqrt(1-yA^2) + l1*sin(omega_l*t) and delta = delta1*sin(omega_delta*t) 
-PND.Ctr.l1       = PD.Ctr.l1/PD.Tether.L0;                              % l1/L0
-PND.Ctr.Om_l     = PD.Ctr.Om_l*sqrt(PD.Tether.L0/PD.Env.g);             % Normalized omega_l1
-PND.Ctr.delta1   = PD.Ctr.delta1*pi/180;                                % delta1 (rad)         
-PND.Ctr.Om_delta = PD.Ctr.Om_delta*sqrt(PD.Tether.L0/PD.Env.g);         % Normalized omega_delta 
-                
+PND.Ctr.delta_a  = PD.Ctr.delta_a*pi/180;       % Aileron deflection (rad)
+PND.Ctr.delta_r  = PD.Ctr.delta_r*pi/180;       % Rudder deflection (rad)
+PND.Ctr.delta_e  = PD.Ctr.delta_e*pi/180;       % Elevator deflection (rad)
+
 % Numerical Parameters
 PND.Num.RelTol   = PD.Num.RelTol;        % Integrator Relative Tolerance
 PND.Num.AbsTol   = PD.Num.AbsTol;        % Integrator Absolute Tolerance
