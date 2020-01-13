@@ -96,7 +96,7 @@ for i=1:1:length(T)
     end
 end
     
-%[Kite Position, Velocity, Euler, alfa&beta, Tension, Control, Rotor angular velocity, Error_C
+%[Kite   Position,          Velocity, Euler, alfa&beta, Tension, Control, Rotor angular velocity, Error_C
 Flag_Plot = [1             ,     1   ,   1  ,     1    ,    1   ,    1   ,       1               ,   1  ];
            
 Plot_Results_KF(Tout,rR_Edge, rR, vR, aR, omegaR, gR, FA_R, Tension, rQ, R_KE, ...
