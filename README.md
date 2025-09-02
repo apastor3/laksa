@@ -1,10 +1,10 @@
 # LAgrangian Kite SimulAtors (LAKSA)
 
-This software has been registered at *Registro Territorial de la Propiedad Intelectual de la Comunidad de Madrid* (*M-007673/2017*)
+This software has been registered at *Registro Territorial de la Propiedad Intelectual de la Comunidad de Madrid* (*M-007673/2017*).
 Copyright (c) 2017 Universidad Carlos III de Madrid, Spain
 
 ## Description
-MALTAB source code.
+MATLAB source code.
 
 ## Authors
 - Gonzalo Sánchez-Arriaga <gonsanch@ing.uc3m.es>
