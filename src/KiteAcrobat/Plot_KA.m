@@ -21,6 +21,7 @@ function Plot_KA(t,rk,RBE,PND,Flag_Dim,PD)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 hFig = figure(23);
+delete(hFig.Children);
 set(hFig, 'Position', [100 100 1000 600]);
 ax1 = axes('Position',[0.1 0.1 0.7 0.7]);
 title(ax1,'')
